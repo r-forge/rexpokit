@@ -25,10 +25,19 @@
   ways as well.
 
   Various messages on discussion boards have asked whether
-  or not there is an R package that uses EXPOKIT, but I
-  haven't found one.  (But see
-  EXPOKIT_For_Dummies_notes_v1.txt for the various tidbits
-  I did find.)
+  or not there is an R package that uses EXPOKIT.  There
+  are only two as of this writing (summer 2012) --
+  \code{\link{diversitree}} and \code{\link{ctarma}}.
+  However, diversitree's usage is nested deeply in a series
+  of dynamic functions and integrated with additional
+  libraries (e.g. deSolve) and so is very difficult to
+  extract for general usage, and \code{\link{ctarma}}
+  implements only ZEXPM via
+  \code{\link{ctarma}}::\code{\link{zexpm}}.
+
+  (See the additional notes file
+  EXPOKIT_For_Dummies_notes_v1.txt for additional notes on
+  wrappers for EXPOKIT in Python etc.)
 
   As it turns out, the EXPOKIT documentation and code is
   far from trivial to figure out, since the code as
@@ -40,29 +49,114 @@
   and make a wrapper for the core function.  I couldn't
   figure it out in a short amount of time, but Stephen
   Smith did for his "Lagrange" biogeography package, so I
-  essentially copied this chunk of his code.
+  essentially copied this chunk of his code to get started.
+  \cr \cr \bold{Installation hints}\cr \cr Installing
+  \code{rexpokit} from source will require gfortran
+  compiler to convert the FORTRAN code files in /src (*.f)
+  to object files (*.o), and g++ to compile and link the
+  C++ wrapper. \code{rexpokit} was developed on an Intel
+  Mac running OS X 10.7.  I (NJM) successfully compiled it
+  using g++ and gfortran from (gcc version 4.2.1).\cr \cr
+  Additional modifications that were helpful, on a Mac at
+  least:\cr \cr \bold{1.} The make variables used by R CMD
+  INSTALL are stored at ~/R/Makevars.  I edited Makevars to
+  add: \cr \cr \code{CPPFLAGS = -I/usr/local/include
+  -I/Library/Frameworks/R.framework/Resources/include
+  -I/Library/Frameworks/R.framework/Resources/include/x86_64
+  -I/Library/Frameworks/R.framework/Versions/2.14/Resources/library/Rcpp/include
+  -I/Library/Frameworks/R.framework/Versions/2.14/Resources/library/RcppArmadillo/include
+  -llapack -lblas} \cr \cr This compiles against the LAPACK
+  and BLAS libraries (-llapack and -lblas flags) but these
+  may not be required as EXPOKIT comes with the essential
+  bits of these libraries.\cr \cr \bold{2.} The
+  \code{\link{install.packages}} command that worked for me
+  (installing \code{rexpokit} (from\cr a source directory)
+  was:\cr \cr \code{install.packages("rexpokit",
+  lib="/Library/Frameworks/R.framework/Resources/library/",
+  NULL, type='source', INSTALL_opts=c("--debug",
+  "--no-multiarch"))} \cr \cr The output from this was: \cr
+  \cr \code{processing 'rexpokit'}\cr \code{a directory}\cr
+  \code{* build_help_types=}\cr \code{* DBG: 'R CMD
+  INSTALL' now doing do_install()}\cr \code{* created lock
+  directory
+  '/Library/Frameworks/R.framework/Versions/2.14/Resources/library/00LOCK-rexpokit'}\cr
+  \code{* installing *source* package 'rexpokit' ...}\cr
+  \code{** libs}\cr \code{*** arch - x86_64}\cr \code{about
+  to run R CMD SHLIB -o rexpokit.so clock.f
+  expokit_wrappers.cpp mataid.f my_expokit.f my_matexp.f
+  rcpp_hello_world.cpp rcpp_module.cpp}\cr \code{gfortran
+  -arch x86_64 -fPIC -g -O2 -c clock.f -o clock.o}\cr
+  \code{g++ -arch x86_64
+  -I/Library/Frameworks/R.framework/Resources/include
+  -I/Library/Frameworks/R.framework/Resources/include/x86_64
+  -I/usr/local/include
+  -I"/Library/Frameworks/R.framework/Versions/2.14/Resources/library/Rcpp/include"
+  -fPIC -g -O2 -c expokit_wrappers.cpp -o
+  expokit_wrappers.o}\cr \code{gfortran -arch x86_64 -fPIC
+  -g -O2 -c mataid.f -o mataid.o}\cr \code{gfortran -arch
+  x86_64 -fPIC -g -O2 -c my_expokit.f -o my_expokit.o}\cr
+  \code{gfortran -arch x86_64 -fPIC -g -O2 -c my_matexp.f
+  -o my_matexp.o}\cr \code{g++ -arch x86_64
+  -I/Library/Frameworks/R.framework/Resources/include
+  -I/Library/Frameworks/R.framework/Resources/include/x86_64
+  -I/usr/local/include
+  -I"/Library/Frameworks/R.framework/Versions/2.14/Resources/library/Rcpp/include"
+  -fPIC -g -O2 -c rcpp_hello_world.cpp -o
+  rcpp_hello_world.o}\cr \code{g++ -arch x86_64
+  -I/Library/Frameworks/R.framework/Resources/include
+  -I/Library/Frameworks/R.framework/Resources/include/x86_64
+  -I/usr/local/include
+  -I"/Library/Frameworks/R.framework/Versions/2.14/Resources/library/Rcpp/include"
+  -fPIC -g -O2 -c rcpp_module.cpp -o rcpp_module.o}\cr
+  \code{g++ -arch x86_64 -dynamiclib
+  -Wl,-headerpad_max_install_names -undefined
+  dynamic_lookup -single_module -multiply_defined suppress
+  -llapack -lblas -lgfortran -L/usr/local/lib -o
+  rexpokit.so clock.o expokit_wrappers.o mataid.o
+  my_expokit.o my_matexp.o rcpp_hello_world.o rcpp_module.o
+  /Library/Frameworks/R.framework/Versions/2.14/Resources/library/Rcpp/lib/x86_64/libRcpp.a
+  -lgfortran -F/Library/Frameworks/R.framework/..
+  -framework R -Wl,-framework -Wl,CoreFoundation}\cr
+  \code{installing to
+  /Library/Frameworks/R.framework/Versions/2.14/Resources/library/rexpokit/libs/x86_64}\cr
+  \code{** R}\cr \code{** inst}\cr \code{** preparing
+  package for lazy loading}\cr \code{Warning: package
+  'SparseM' was built under R version 2.14.2}\cr \code{**
+  help}\cr \code{*** installing help indices}\cr \code{**
+  building package indices ...}\cr \code{** testing if
+  installed package can be loaded}\cr \code{Warning
+  message:}\cr \code{package 'SparseM' was built under R
+  version 2.14.2 }\cr \code{}\cr \code{* DONE
+  (rexpokit)}\cr \cr \cr \bold{Acknowledgements/sources}\cr
+  \cr \bold{1.} EXPOKIT, original FORTRAN package, by Roger
+  B. Sidje \email{rbs@maths.uq.edu.au}, Department of
+  Mathematics, University of Queensland, Brisbane,
+  QLD-4072, Australia, (c) 1996-2006 All Rights Reserved\cr
+  \cr Sidje has given permission for us to include EXPOKIT
+  code in this R package under the usual GPL license for
+  CRAN R packages. For the full EXPOKIT copyright and
+  license, see expokit_copyright.txt \cr
 
-  The package also contains some example functions to
-  simulate dense and sparse transition matrices to test the
-  speed of the various algorithms, so that users can pick
-  the best choice for their purposes.  This will of course
-  require users to install the relevant R packages (I won't
-  make those required dependencies, however).\cr \cr
-  Acknowledgements/sources:\cr \cr 1. Copied in part from a
-  file in Lagrange, C++ version by Stephen Smith:\cr
-  \url{http://code.google.com/p/lagrange/}\cr
+  EXPOKIT was published by Sidje in: Sidje RB (1998).
+  "Expokit. A Software Package for Computing Matrix
+  Exponentials." \emph{CM-Transactions on Mathematical
+  Software}, 24(1):130-156.
+  \url{http://tinyurl.com/bwa87rq}\cr \cr \bold{2.} Copied
+  in part from a file in Lagrange, C++ version by Stephen
+  Smith:\cr \url{http://code.google.com/p/lagrange/}\cr
   \url{https://github.com/blackrim/lagrange}\cr \cr
-  Specifically:\cr * RateMatrix.cpp\cr * \cr * Created on:
-  Aug 14, 2009\cr * Author: smitty\cr *\cr ...and the
-  my_*.f wrappers for the EXPOKIT *.f code files.\cr \cr 2.
+  Specifically:\cr \cr \code{ * RateMatrix.cpp}\cr \code{ *
+  }\cr \code{ * Created on: Aug 14, 2009}\cr \code{ *
+  Author: smitty}\cr \code{ *}\cr \cr ...and the my_*.f
+  wrappers for the EXPOKIT *.f code files.\cr \cr \bold{3.}
   Also copied in part (to get the .h file) from:\cr \cr
   Python package "Pyprop":\cr
   \url{http://code.google.com/p/pyprop/}\cr
   \url{http://pyprop.googlecode.com/svn/trunk/core/krylov/expokit/expokitpropagator.cpp}\cr
   \url{http://www.koders.com/python/fidCA95B5A4B2FB77455A72B8A361CF684FFE48F4DC.aspx?s=fourier+transform}\cr
   \cr Specifically:\cr
-  pyprop/core/krylov/expokit/f2c/expokit.h \cr \cr 3.
-  EXPOKIT package is available at:\cr
+  pyprop/core/krylov/expokit/f2c/expokit.h \cr \cr
+  \bold{4.} EXPOKIT package is available at:\cr
   \url{http://www.maths.uq.edu.au/expokit/}\cr \cr
   Copyright:\cr
   \url{http://www.maths.uq.edu.au/expokit/copyright}\cr
@@ -71,7 +165,6 @@
 \examples{
 # Example code
 # For background, see EXPOKIT_For_Dummies_notes_v1.txt
-# For installation hints, see notes (?)
 
 library(rexpokit)
 
@@ -139,20 +232,22 @@ for (i in 1:length(list_of_P_matrices_dmexpv))
 }
 \author{
   Nicholas J. Matzke \email{matzke@berkeley.edu}
+
+  Niels Richard Hansen \email{Niels.R.Hansen@math.ku.dk}
 }
 \references{
-  Foster PG (2001). “The Idiot's Guide to the Zen of
-  Likelihood in a Nutshell in Seven Days for Dummies,
-  Unleashed.” Online PDF, widely copied, <URL:
-  \link{http://www.bioinf.org/molsys/data/idiots.pdf}>.
+  Sidje RB (1998). “Expokit. A Software Package for
+  Computing Matrix Exponentials.” _ACM Trans. Math.
+  Softw._, *24*(1), pp. 130-156.
 
   Moler C and Loan CV (2003). “Nineteen dubious ways to
   compute the exponential of a matrix, twenty-five years
   later.” _SIAM review_, pp. 3-49.
 
-  Sidje RB (1998). “Expokit. A Software Package for
-  Computing Matrix Exponentials.” _ACM Trans. Math.
-  Softw._, *24*(1), pp. 130-156.
+  Foster PG (2001). “The Idiot's Guide to the Zen of
+  Likelihood in a Nutshell in Seven Days for Dummies,
+  Unleashed.” Online PDF, widely copied, <URL:
+  \link{http://www.bioinf.org/molsys/data/idiots.pdf}>.
 }
 \seealso{
   \code{\link{expokit_wrapalldmexpv_tvals}}

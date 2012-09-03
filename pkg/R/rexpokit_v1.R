@@ -37,10 +37,10 @@ require(roxygen2)
 #'\cr
 #' From EXPOKIT:\cr
 #' \cr
-#' *     Computes exp(t*H), the matrix exponential of a general matrix in \cr
-#' *     full, using the irreducible rational Pade approximation to the   \cr
-#' *     exponential function exp(x) = r(x) = (+/-)( I + 2*(q(x)/p(x)) ), \cr
-#' *     combined with scaling-and-squaring.                              \cr
+#' \code{*     Computes exp(t*H), the matrix exponential of a general matrix in }\cr
+#' \code{*     full, using the irreducible rational Pade approximation to the   }\cr
+#' \code{*     exponential function exp(x) = r(x) = (+/-)( I + 2*(q(x)/p(x)) ), }\cr
+#' \code{*     combined with scaling-and-squaring.                              }\cr
 #' \cr
 #' If \code{Qmat} is NULL (default), a default matrix is input.\cr
 #'
@@ -54,6 +54,27 @@ require(roxygen2)
 #' @seealso \code{\link{mat2coo}}
 #' @export
 #' @author Nicholas J. Matzke \email{matzke@@berkeley.edu}
+#' @examples	# Example:
+#' # Make a square instantaneous rate matrix (Q matrix)
+#' # This matrix is taken from Peter Foster's (2001) "The Idiot's Guide
+#' # to the Zen of Likelihood in a Nutshell in Seven Days for Dummies,
+#' # Unleashed" at:
+#' # http://www.bioinf.org/molsys/data/idiots.pdf
+#' #
+#' # The Q matrix includes the stationary base freqencies, which Pmat 
+#' # converges to as t becomes large.
+#' Qmat = matrix(c(-1.218, 0.504, 0.336, 0.378, 0.126, -0.882, 0.252, 0.504, 0.168, 0.504, -1.05, 0.378, 0.126, 0.672, 0.252, -1.05), nrow=4, byrow=TRUE)
+#' 
+#' # Make a series of t values
+#' tvals = c(0.001, 0.005, 0.01, 0.05, 0.1, 0.5, 1, 2, 5, 14)
+#' 
+#' # Exponentiate each with EXPOKIT's dgpadm (good for small dense matrices)
+#' for (t in tvals)
+#' 	{
+#' 	Pmat = expokit_dgpadm_Qmat(Qmat=Qmat, t=t, transpose_needed=TRUE)
+#' 	cat("\n\nTime=", t, "\n", sep="")
+#' 	print(Pmat)
+#' 	}
 #' 
 expokit_dgpadm_Qmat <- function(Qmat=NULL, t=2.1, transpose_needed=TRUE)
 	{
@@ -148,17 +169,17 @@ expokit_dgpadm_Qmat <- function(Qmat=NULL, t=2.1, transpose_needed=TRUE)
 #' and wrapper functions \code{wrapalldmexpv_} around dmexpv.
 #'\cr
 #' From EXPOKIT:\cr
-#' *     The method used is based on Krylov subspace projection\cr
-#' *     techniques and the matrix under consideration interacts only\cr
-#' *     via the external routine `matvec' performing the matrix-vector \cr
-#' *     product (matrix-free method).\cr
-#' *\cr
-#' *     This is a customised version for Markov Chains. This means that a\cr
-#' *     check is done within this code to ensure that the resulting vector \cr
-#' *     w is a probability vector, i.e., w must have all its components \cr
-#' *     in [0,1], with sum equal to 1. This check is done at some expense\cr
-#' *     and the user may try DGEXPV which is cheaper since it ignores \cr
-#' *     probability constraints.\cr
+#' \code{*     The method used is based on Krylov subspace projection}\cr
+#' \code{*     techniques and the matrix under consideration interacts only}\cr
+#' \code{*     via the external routine 'matvec' performing the matrix-vector} \cr
+#' \code{*     product (matrix-free method).}\cr
+#' \code{*}\cr
+#' \code{*     This is a customised version for Markov Chains. This means that a}\cr
+#' \code{*     check is done within this code to ensure that the resulting vector} \cr
+#' \code{*     w is a probability vector, i.e., w must have all its components }\cr
+#' \code{*     in [0,1], with sum equal to 1. This check is done at some expense}\cr
+#' \code{*     and the user may try DGEXPV which is cheaper since it ignores }\cr
+#' \code{*     probability constraints.}\cr
 #'\cr
 #' COO (coordinated list) format is a compressed format that is\cr
 #' required for EXPOKIT's sparse-matrix functions (like dmexpv and\cr
@@ -186,6 +207,27 @@ expokit_dgpadm_Qmat <- function(Qmat=NULL, t=2.1, transpose_needed=TRUE)
 #' @seealso \code{\link{expokit_wrapalldmexpv_tvals}}
 #' @export
 #' @author Nicholas J. Matzke \email{matzke@@berkeley.edu}
+#' @examples	# Example:
+#' # Make a square instantaneous rate matrix (Q matrix)
+#' # This matrix is taken from Peter Foster's (2001) "The Idiot's Guide
+#' # to the Zen of Likelihood in a Nutshell in Seven Days for Dummies,
+#' # Unleashed" at:
+#' # http://www.bioinf.org/molsys/data/idiots.pdf
+#' #
+#' # The Q matrix includes the stationary base freqencies, which Pmat 
+#' # converges to as t becomes large.
+#' Qmat = matrix(c(-1.218, 0.504, 0.336, 0.378, 0.126, -0.882, 0.252, 0.504, 0.168, 0.504, -1.05, 0.378, 0.126, 0.672, 0.252, -1.05), nrow=4, byrow=TRUE)
+#' 
+#' # Make a series of t values
+#' tvals = c(0.001, 0.005, 0.01, 0.05, 0.1, 0.5, 1, 2, 5, 14)
+#' 
+#' # Exponentiate each with EXPOKIT's dmexpv (should be fast for large sparse matrices)
+#' for (t in tvals)
+#' 	{
+#' 	Pmat = expokit_dmexpv_Qmat(Qmat=Qmat, t=t, transpose_needed=TRUE)
+#' 	cat("\n\nTime=", t, "\n", sep="")
+#' 	print(Pmat)
+#' 	}
 #' 
 expokit_dmexpv_Qmat <- function(Qmat=NULL, t=2.1, transpose_needed=TRUE, anorm=NULL)
 	{
@@ -310,6 +352,33 @@ expokit_dmexpv_Qmat <- function(Qmat=NULL, t=2.1, transpose_needed=TRUE, anorm=N
 #' @seealso \code{\link{expokit_wrapalldmexpv_tvals}}
 #' @export
 #' @author Nicholas J. Matzke \email{matzke@@berkeley.edu}
+#' @examples
+#' # Make a square instantaneous rate matrix (Q matrix)
+#' # This matrix is taken from Peter Foster's (2001) "The Idiot's Guide
+#' # to the Zen of Likelihood in a Nutshell in Seven Days for Dummies,
+#' # Unleashed" at:
+#' # http://www.bioinf.org/molsys/data/idiots.pdf
+#' #
+#' # The Q matrix includes the stationary base freqencies, which Pmat 
+#' # converges to as t becomes large.
+#' Qmat = matrix(c(-1.218, 0.504, 0.336, 0.378, 0.126, -0.882, 0.252, 0.504, 0.168, 0.504, -1.05, 0.378, 0.126, 0.672, 0.252, -1.05), nrow=4, byrow=TRUE)
+#' 
+#' # Make a series of t values
+#' tvals = c(0.001, 0.005, 0.01, 0.05, 0.1, 0.5, 1, 2, 5, 14)
+#' 
+#' # DMEXPV and DGEXPV are designed for large, sparse Q matrices (sparse = lots of zeros).
+#' # DMEXPV is specifically designed for Markov chains and so may be slower, but more accurate.
+#' 
+#' # DMEXPV, single t-value
+#' expokit_wrapalldmexpv_tvals(Qmat=Qmat, tvals=tvals[1], transpose_needed=TRUE)
+#' expokit_wrapalldmexpv_tvals(Qmat=Qmat, tvals=2)
+#' 
+#' # This function runs a for-loop itself (sadly, we could not get mapply() to work
+#' # on a function that calls dmexpv/dgexpv), returning a list of probability matrices.
+#' 
+#' # DMEXPV functions
+#' list_of_P_matrices_dmexpv = expokit_wrapalldmexpv_tvals(Qmat=Qmat, tvals=tvals, transpose_needed=TRUE)
+#' list_of_P_matrices_dmexpv
 #' 
 expokit_dmexpv_wrapper <- function(n, m, t, v, w, tol, anorm, wsp, lwsp, iwsp, liwsp, itrace, iflag, ia, ja, a, nz, res)
 	{
@@ -345,6 +414,33 @@ expokit_dmexpv_wrapper <- function(n, m, t, v, w, tol, anorm, wsp, lwsp, iwsp, l
 #' @seealso \code{\link{expokit_dmexpv_Qmat}}
 #' @export
 #' @author Nicholas J. Matzke \email{matzke@@berkeley.edu}
+#' @examples
+#' # Make a square instantaneous rate matrix (Q matrix)
+#' # This matrix is taken from Peter Foster's (2001) "The Idiot's Guide
+#' # to the Zen of Likelihood in a Nutshell in Seven Days for Dummies,
+#' # Unleashed" at:
+#' # http://www.bioinf.org/molsys/data/idiots.pdf
+#' #
+#' # The Q matrix includes the stationary base freqencies, which Pmat 
+#' # converges to as t becomes large.
+#' Qmat = matrix(c(-1.218, 0.504, 0.336, 0.378, 0.126, -0.882, 0.252, 0.504, 0.168, 0.504, -1.05, 0.378, 0.126, 0.672, 0.252, -1.05), nrow=4, byrow=TRUE)
+#' 
+#' # Make a series of t values
+#' tvals = c(0.001, 0.005, 0.01, 0.05, 0.1, 0.5, 1, 2, 5, 14)
+#' 
+#' # DMEXPV and DGEXPV are designed for large, sparse Q matrices (sparse = lots of zeros).
+#' # DMEXPV is specifically designed for Markov chains and so may be slower, but more accurate.
+#' 
+#' # DGEXPV, single t-value
+#' expokit_wrapalldgexpv_tvals(Qmat=Qmat, tvals=tvals[1], transpose_needed=TRUE)
+#' expokit_wrapalldgexpv_tvals(Qmat=Qmat, tvals=2)
+#' 
+#' # This function runs the for-loop itself (sadly, we could not get mapply() to work
+#' # on a function that calls dmexpv/dgexpv), returning a list of probability matrices.
+#' 
+#' # DGEXPV functions
+#' list_of_P_matrices_dgexpv = expokit_wrapalldgexpv_tvals(Qmat=Qmat, tvals=tvals, transpose_needed=TRUE)
+#' list_of_P_matrices_dgexpv
 #' 
 expokit_wrapalldmexpv_tvals <- function(Qmat=NULL, tvals=c(2.1), transpose_needed=TRUE, COO_needed=TRUE, coo_n=NULL, force_list_if_1_tval=FALSE)
 	{
@@ -520,6 +616,14 @@ expokit_wrapalldmexpv_tvals <- function(Qmat=NULL, tvals=c(2.1), transpose_neede
 #' @export
 #' @author Nicholas J. Matzke \email{matzke@@berkeley.edu}
 #' @examples # Example use:
+#' @examples
+#' # Make a Q matrix
+#' tmpmat = matrix(c(-1.218, 0.504, 0.336, 0.378, 0.126, -0.882, 0.252, 0.504, 0.168, 0.504, -1.05, 0.378, 0.126, 0.672, 0.252, -1.05), nrow=4, byrow=TRUE)
+#' 
+#' # Convert to coo format
+#' tmpmat_in_REXPOKIT_coo_fmt = mat2coo(tmpmat)
+#' tmpmat_in_REXPOKIT_coo_fmt
+#' 
 mat2coo <- function(tmpmat)
 	{
 	defaults = '
@@ -582,6 +686,16 @@ mat2coo <- function(tmpmat)
 #' @export
 #' @author Nicholas J. Matzke \email{matzke@@berkeley.edu}
 #' @examples # Example use:
+#' # Make a Q matrix
+#' tmpmat = matrix(c(-1.218, 0.504, 0.336, 0.378, 0.126, -0.882, 0.252, 0.504, 0.168, 0.504, -1.05, 0.378, 0.126, 0.672, 0.252, -1.05), nrow=4, byrow=TRUE)
+#' 
+#' # Covert to SparseM coo format
+#' tmpmat_in_SparseMcoo_fmt = as.matrix.coo(tmpmat)
+#' 
+#' # Convert to REXPOKIT coo format
+#' tmpmat_in_REXPOKIT_coo_fmt = SparseM_coo_to_REXPOKIT_coo(tmpmat_in_SparseMcoo_fmt)
+#' tmpmat_in_REXPOKIT_coo_fmt
+#' 
 SparseM_coo_to_REXPOKIT_coo <- function(tmpmat_in_SparseMcoo_fmt)
 	{
 	tmpcoo = tmpmat_in_SparseMcoo_fmt
@@ -662,6 +776,13 @@ coo2mat <- function(coomat, n)
 #' @seealso \code{\link{mat2coo}}
 #' @export
 #' @author Nicholas J. Matzke \email{matzke@@berkeley.edu}
+#' @examples # Example use:
+#' # Make a Q matrix
+#' tmpmat = matrix(c(-1.218, 0.504, 0.336, 0.378, 0.126, -0.882, 0.252, 0.504, 0.168, 0.504, -1.05, 0.378, 0.126, 0.672, 0.252, -1.05), nrow=4, byrow=TRUE)
+#' 
+#' # Convert to REXPOKIT coo format
+#' tmpmat_in_REXPOKIT_coo_fmt = mat2coo_forloop(tmpmat)
+#' tmpmat_in_REXPOKIT_coo_fmt
 #' 
 mat2coo_forloop <- function(tmpmat)
 	{
@@ -713,6 +834,7 @@ mat2coo_forloop <- function(tmpmat)
 #' This function converts a matrix to COO format and exponentiates
 #' it via the EXPOKIT dgexpv function (designed for sparse matrices)
 #' and wrapper functions \code{wrapalldgexpv_} around dgexpv.\cr
+#'
 #'\cr
 #' NOTE: DGEXPV vs. DMEXPV. According to the EXPOKIT documentation, DGEXPV should be
 #' faster than DMEXPV, however DMEXPV runs an accuracy check appropriate for
@@ -720,17 +842,17 @@ mat2coo_forloop <- function(tmpmat)
 #' \cr
 #' From EXPOKIT:\cr
 #'\cr
-#' *     The method used is based on Krylov subspace projection\cr
-#' *     techniques and the matrix under consideration interacts only\cr
-#' *     via the external routine `matvec' performing the matrix-vector \cr
-#' *     product (matrix-free method).\cr
-#' *\cr
-#' *     This [DMEXPV, not DGEXPV -- NJM] is a customised version for Markov Chains. This means that a\cr
-#' *     check is done within this code to ensure that the resulting vector \cr
-#' *     w is a probability vector, i.e., w must have all its components \cr
-#' *     in [0,1], with sum equal to 1. This check is done at some expense\cr
-#' *     and the user may try DGEXPV which is cheaper since it ignores \cr
-#' *     probability constraints.\cr
+#' \code{*     The method used is based on Krylov subspace projection}\cr
+#' \code{*     techniques and the matrix under consideration interacts only}\cr
+#' \code{*     via the external routine 'matvec' performing the matrix-vector} \cr
+#' \code{*     product (matrix-free method).}\cr
+#' \code{*}\cr
+#' \code{*     This [DMEXPV, not DGEXPV -- NJM] is a customised version for Markov Chains. This means that a}\cr
+#' \code{*     check is done within this code to ensure that the resulting vector }\cr
+#' \code{*     w is a probability vector, i.e., w must have all its components }\cr
+#' \code{*     in [0,1], with sum equal to 1. This check is done at some expense}\cr
+#' \code{*     and the user may try DGEXPV which is cheaper since it ignores }\cr
+#' \code{*     probability constraints.}\cr
 #'\cr
 #' I (NJM) have not noticed a difference between the outputs of these two functions, but it might
 #' occur with large matrices.
@@ -759,6 +881,41 @@ mat2coo_forloop <- function(tmpmat)
 #' @seealso \code{\link{expokit_wrapalldgexpv_tvals}}
 #' @export
 #' @author Nicholas J. Matzke \email{matzke@@berkeley.edu}
+#' @examples 	# Example:
+#' # Make a square instantaneous rate matrix (Q matrix)
+#' # This matrix is taken from Peter Foster's (2001) "The Idiot's Guide
+#' # to the Zen of Likelihood in a Nutshell in Seven Days for Dummies,
+#' # Unleashed" at:
+#' # http://www.bioinf.org/molsys/data/idiots.pdf
+#' #
+#' # The Q matrix includes the stationary base freqencies, which Pmat 
+#' # converges to as t becomes large.
+#' Qmat = matrix(c(-1.218, 0.504, 0.336, 0.378, 0.126, -0.882, 0.252, 0.504, 0.168, 0.504, -1.05, 0.378, 0.126, 0.672, 0.252, -1.05), nrow=4, byrow=TRUE)
+#' 
+#' # Make a series of t values
+#' tvals = c(0.001, 0.005, 0.01, 0.05, 0.1, 0.5, 1, 2, 5, 14)
+#' 
+#' # Exponentiate each with EXPOKIT's dgexpv (should be fast for large sparse matrices)
+#' for (t in tvals)
+#' 	{
+#' 	Pmat = expokit_dmgxpv_Qmat(Qmat=Qmat, t=t, transpose_needed=TRUE)
+#' 	cat("\n\nTime=", t, "\n", sep="")
+#' 	print(Pmat)
+#' 	}
+#'
+#' # DMEXPV and DGEXPV are designed for large, sparse Q matrices (sparse = lots of zeros).
+#' # DMEXPV is specifically designed for Markov chains and so may be slower, but more accurate.
+#' 
+#' # DGEXPV, single t-value
+#' expokit_wrapalldgexpv_tvals(Qmat=Qmat, tvals=tvals[1], transpose_needed=TRUE)
+#' expokit_wrapalldgexpv_tvals(Qmat=Qmat, tvals=2)
+#' 
+#' # This function runs the for-loop itself (sadly, we could not get mapply() to work
+#' # on a function that calls dmexpv/dgexpv), returning a list of probability matrices.
+#' 
+#' # DGEXPV functions
+#' list_of_P_matrices_dgexpv = expokit_wrapalldgexpv_tvals(Qmat=Qmat, tvals=tvals, transpose_needed=TRUE)
+#' list_of_P_matrices_dgexpv
 #' 
 expokit_dgexpv_Qmat <- function(Qmat=NULL, t=2.1, transpose_needed=TRUE, anorm=NULL)
 	{
@@ -887,7 +1044,86 @@ expokit_dgexpv_Qmat <- function(Qmat=NULL, t=2.1, transpose_needed=TRUE, anorm=N
 #' @seealso \code{\link{expokit_wrapalldgexpv_tvals}}
 #' @export
 #' @author Nicholas J. Matzke \email{matzke@@berkeley.edu}
+#' @examples # Example building the inputs from scratch:
+#'
+#' # Make a square instantaneous rate matrix (Q matrix)
+#' # This matrix is taken from Peter Foster's (2001) "The Idiot's Guide
+#' # to the Zen of Likelihood in a Nutshell in Seven Days for Dummies,
+#' # Unleashed" at:
+#' # http://www.bioinf.org/molsys/data/idiots.pdf
+#' #
+#' # The Q matrix includes the stationary base freqencies, which Pmat 
+#' # converges to as t becomes large.
+#' Qmat = matrix(c(-1.218, 0.504, 0.336, 0.378, 0.126, -0.882, 0.252, 0.504, 0.168, 0.504, -1.05, 0.378, 0.126, 0.672, 0.252, -1.05), nrow=4, byrow=TRUE)
 #' 
+#' # Make a series of t values
+#' tvals = c(0.001, 0.005, 0.01, 0.05, 0.1, 0.5, 1, 2, 5, 14)
+#' 
+#' 	ideg = as.integer(6)
+#'	n=nrow(Qmat)
+#'	m=n-1
+#'	# t=as.numeric(2.1)
+#'	
+#'	# v should have as many elements as n; first element = 1 (?)
+#'	v=double(n)
+#'	v[1] = 1
+#'	
+#'	# w is the same length
+#'	w = double(length=n)
+#'	tol=as.numeric(0.01)
+#'	
+#'	# length of wsp
+#'	#lwsp = as.integer(n*(m+1)+n+(m+2)^2 + 4*(m+2)^2+ideg+1)
+#'	#lwsp = as.integer(n*(m+1)+n+(m+2)^2 + 5*(m+2)^2+ideg+1)
+#'	lwsp = as.integer(n*(m+2)+5*(m+2)^2+ideg+1)
+#'	
+#'	#lwsp = 100
+#'	wsp = double(length=lwsp)
+#'	
+#'	# length of iwsp
+#'	liwsp = m+2
+#'	iwsp = integer(length=liwsp)
+#'	
+#'	res = double(length=n*n)
+#'	
+#'	#matvec = matrix(data=Q, nrow=n, byrow=TRUE)
+#'	matvec = Qmat
+#'	tmatvec = t(matvec)
+#'	rowSums(tmatvec)
+#'	colSums(tmatvec)
+#'	
+#'	# type="O" is being used here, this is supposed to be the
+#'	# default for norm(), although it throws an error if not
+#'	# specified
+#'	# 
+#'	# From the help:
+#'	# type - character string, specifying the type of matrix norm to be
+#'	# computed. A character indicating the type of norm desired. 
+#'	# 	"O", "o" or "1"
+#'	# 		specifies the one norm, (maximum absolute column sum);
+#'	anorm = as.numeric(norm(matvec, type="O"))
+#'	#anorm = 1
+#'	
+#'	
+#'	itrace = 0
+#'	iflag = 0	
+#'	
+#'	
+#'	#a = as.numeric(tmatvec)
+#'	#a = as.numeric(matvec)
+#'	tmpmat = tmatvec
+#'	tmpmat_in_REXPOKIT_coo_fmt = mat2coo(tmpmat)
+#'	ia = tmpmat_in_REXPOKIT_coo_fmt[,"ia"]
+#'	ja = tmpmat_in_REXPOKIT_coo_fmt[,"ja"]
+#'	a = tmpmat_in_REXPOKIT_coo_fmt[,"a"]
+#' 
+#' 
+#' Run the wrapper function	
+#' 
+#' tmpoutmat = expokit_dgexpv_wrapper(n, m, t, v, w, tol, anorm, wsp, lwsp, iwsp, liwsp, itrace, iflag, ia, ja, a, nz, res)
+#' 
+#' print(tmpoutmat)
+#'
 expokit_dgexpv_wrapper <- function(n, m, t, v, w, tol, anorm, wsp, lwsp, iwsp, liwsp, itrace, iflag, ia, ja, a, nz, res)
 	{
 	res2 = NULL
@@ -926,7 +1162,44 @@ expokit_dgexpv_wrapper <- function(n, m, t, v, w, tol, anorm, wsp, lwsp, iwsp, l
 #' @seealso \code{\link{expokit_dgexpv_Qmat}}
 #' @export
 #' @author Nicholas J. Matzke \email{matzke@@berkeley.edu}
+#' @examples # Example:
+#' # Make a square instantaneous rate matrix (Q matrix)
+#' # This matrix is taken from Peter Foster's (2001) "The Idiot's Guide
+#' # to the Zen of Likelihood in a Nutshell in Seven Days for Dummies,
+#' # Unleashed" at:
+#' # http://www.bioinf.org/molsys/data/idiots.pdf
+#' #
+#' # The Q matrix includes the stationary base freqencies, which Pmat 
+#' # converges to as t becomes large.
+#' Qmat = matrix(c(-1.218, 0.504, 0.336, 0.378, 0.126, -0.882, 0.252, 0.504, 0.168, 0.504, -1.05, 0.378, 0.126, 0.672, 0.252, -1.05), nrow=4, byrow=TRUE)
 #' 
+#' # Make a series of t values
+#' tvals = c(0.001, 0.005, 0.01, 0.05, 0.1, 0.5, 1, 2, 5, 14)
+#' 
+#' # Exponentiate each with EXPOKIT's dgexpv (should be fast for large sparse matrices)
+#' for (t in tvals)
+#' 	{
+#' 	Pmat = expokit_dgexpv_Qmat(Qmat=Qmat, t=t, transpose_needed=TRUE)
+#' 	cat("\n\nTime=", t, "\n", sep="")
+#' 	print(Pmat)
+#' 	}
+#'
+#' # DMEXPV and DGEXPV are designed for large, sparse Q matrices (sparse = lots of zeros).
+#' # DMEXPV is specifically designed for Markov chains and so may be slower, but more accurate.
+#' 
+#' # DMEXPV, single t-value
+#' 
+#' # DGEXPV, single t-value
+#' expokit_wrapalldgexpv_tvals(Qmat=Qmat, tvals=tvals[1], transpose_needed=TRUE)
+#' expokit_wrapalldgexpv_tvals(Qmat=Qmat, tvals=2)
+#' 
+#' # These functions runs the for-loop itself (sadly, we could not get mapply() to work
+#' # on a function that calls dmexpv/dgexpv), returning a list of probability matrices.
+#' 
+#' # DGEXPV functions
+#' list_of_P_matrices_dgexpv = expokit_wrapalldgexpv_tvals(Qmat=Qmat, tvals=tvals, transpose_needed=TRUE)
+#' list_of_P_matrices_dgexpv
+#'
 expokit_wrapalldgexpv_tvals <- function(Qmat=NULL, tvals=c(2.1), transpose_needed=TRUE, COO_needed=TRUE, coo_n=NULL, force_list_if_1_tval=FALSE)
 	{
 	defaults = '
@@ -976,7 +1249,7 @@ expokit_wrapalldgexpv_tvals <- function(Qmat=NULL, tvals=c(2.1), transpose_neede
 	
 
 	#######################################################
-        ideg = as.integer(6)
+	ideg = as.integer(6)
 	#######################################################
 	n=nrow(Qmat)
 	m=n-1

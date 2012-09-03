@@ -31,25 +31,50 @@
   exponentiates it via the EXPOKIT dmexpv function
   (designed for sparse matrices) and wrapper functions
   \code{wrapalldmexpv_} around dmexpv. \cr From EXPOKIT:\cr
-  * The method used is based on Krylov subspace
-  projection\cr * techniques and the matrix under
-  consideration interacts only\cr * via the external
-  routine `matvec' performing the matrix-vector \cr *
-  product (matrix-free method).\cr *\cr * This is a
-  customised version for Markov Chains. This means that
-  a\cr * check is done within this code to ensure that the
-  resulting vector \cr * w is a probability vector, i.e., w
-  must have all its components \cr * in [0,1], with sum
-  equal to 1. This check is done at some expense\cr * and
-  the user may try DGEXPV which is cheaper since it ignores
-  \cr * probability constraints.\cr \cr COO (coordinated
-  list) format is a compressed format that is\cr required
-  for EXPOKIT's sparse-matrix functions (like dmexpv and\cr
-  unlike EXPOKIT's padm-related functions.\cr \cr COO
-  (coordinated list) format is described here:\cr \cr
+  \code{* The method used is based on Krylov subspace
+  projection}\cr \code{* techniques and the matrix under
+  consideration interacts only}\cr \code{* via the external
+  routine 'matvec' performing the matrix-vector} \cr
+  \code{* product (matrix-free method).}\cr \code{*}\cr
+  \code{* This is a customised version for Markov Chains.
+  This means that a}\cr \code{* check is done within this
+  code to ensure that the resulting vector} \cr \code{* w
+  is a probability vector, i.e., w must have all its
+  components }\cr \code{* in [0,1], with sum equal to 1.
+  This check is done at some expense}\cr \code{* and the
+  user may try DGEXPV which is cheaper since it ignores
+  }\cr \code{* probability constraints.}\cr \cr COO
+  (coordinated list) format is a compressed format that
+  is\cr required for EXPOKIT's sparse-matrix functions
+  (like dmexpv and\cr unlike EXPOKIT's padm-related
+  functions.\cr \cr COO (coordinated list) format is
+  described here:\cr \cr
   \link{http://en.wikipedia.org/wiki/Sparse_matrix#Coordinate_list_.28COO.29}\cr
   \cr If \code{Qmat} is NULL (default), a default matrix is
   input.\cr
+}
+\examples{
+# Example:
+# Make a square instantaneous rate matrix (Q matrix)
+# This matrix is taken from Peter Foster's (2001) "The Idiot's Guide
+# to the Zen of Likelihood in a Nutshell in Seven Days for Dummies,
+# Unleashed" at:
+# http://www.bioinf.org/molsys/data/idiots.pdf
+#
+# The Q matrix includes the stationary base freqencies, which Pmat
+# converges to as t becomes large.
+Qmat = matrix(c(-1.218, 0.504, 0.336, 0.378, 0.126, -0.882, 0.252, 0.504, 0.168, 0.504, -1.05, 0.378, 0.126, 0.672, 0.252, -1.05), nrow=4, byrow=TRUE)
+
+# Make a series of t values
+tvals = c(0.001, 0.005, 0.01, 0.05, 0.1, 0.5, 1, 2, 5, 14)
+
+# Exponentiate each with EXPOKIT's dmexpv (should be fast for large sparse matrices)
+for (t in tvals)
+	{
+	Pmat = expokit_dmexpv_Qmat(Qmat=Qmat, t=t, transpose_needed=TRUE)
+	cat("\\n\\nTime=", t, "\\n", sep="")
+	print(Pmat)
+	}
 }
 \author{
   Nicholas J. Matzke \email{matzke@berkeley.edu}

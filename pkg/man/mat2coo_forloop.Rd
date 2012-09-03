@@ -16,6 +16,15 @@
   function uses for-loops, which is presumably less
   efficient than \code{\link{mat2coo}}.
 }
+\examples{
+# Example use:
+# Make a Q matrix
+tmpmat = matrix(c(-1.218, 0.504, 0.336, 0.378, 0.126, -0.882, 0.252, 0.504, 0.168, 0.504, -1.05, 0.378, 0.126, 0.672, 0.252, -1.05), nrow=4, byrow=TRUE)
+
+# Convert to REXPOKIT coo format
+tmpmat_in_REXPOKIT_coo_fmt = mat2coo_forloop(tmpmat)
+tmpmat_in_REXPOKIT_coo_fmt
+}
 \author{
   Nicholas J. Matzke \email{matzke@berkeley.edu}
 }
