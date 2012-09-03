@@ -395,7 +395,7 @@ expokit_wrapalldmexpv_tvals <- function(Qmat=NULL, tvals=c(2.1), transpose_neede
 	
 
 	#######################################################
-	# ideg = as.integer(6)
+	ideg = as.integer(6)
 	#######################################################
 	n=nrow(Qmat)
 	m=n-1
@@ -976,7 +976,7 @@ expokit_wrapalldgexpv_tvals <- function(Qmat=NULL, tvals=c(2.1), transpose_neede
 	
 
 	#######################################################
-	# ideg = as.integer(6)
+        ideg = as.integer(6)
 	#######################################################
 	n=nrow(Qmat)
 	m=n-1
