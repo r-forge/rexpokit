@@ -1,0 +1,3 @@
+useDynLib(rexpokit)
+exportPattern("^[[:alpha:]]+")
+import( Rcpp )
