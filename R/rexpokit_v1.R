@@ -1,6 +1,6 @@
 #' @include fermat.R
 #' @include rexpokit-package.R
-require(roxygen2)
+ 
 #sourcedir = '/Dropbox/_njm/'
 #source3 = '_genericR_v1.R'
 #source(paste(sourcedir, source3, sep=""))

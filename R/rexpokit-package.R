@@ -3,8 +3,8 @@
 #' \tabular{ll}{
 #' Package: \tab rexpokit\cr
 #' Type: \tab Package\cr
-#' Version: \tab 0.2\cr
-#' Date: \tab 2013-01-26\cr
+#' Version: \tab 0.21\cr
+#' Date: \tab 2013-01-30\cr
 #' License: \tab GPL (>= 2)\cr
 #' LazyLoad: \tab yes\cr
 #' }
@@ -192,4 +192,4 @@
 #' 	}
 #' 
 
-require(roxygen2)
+ 

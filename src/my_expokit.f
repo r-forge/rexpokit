@@ -158,14 +158,14 @@
 
 *---  check restrictions on input parameters ...
       iflag = 0
-      if ( lwsp.lt.n*(m+2)+5*(m+2)**2+ideg+1 ) stop 'iflag = -1'
-      if ( liwsp.lt.m+2 ) stop 'iflag = -2'
-      if ( m.ge.n .or. m.le.0 ) stop 'iflag = -3'
-*      if ( lwsp.lt.n*(m+2)+5*(m+2)**2+ideg+1 ) iflag = -1
-*      if ( liwsp.lt.m+2 ) iflag = -2
-*      if ( m.ge.n .or. m.le.0 ) iflag = -3
+*      if ( lwsp.lt.n*(m+2)+5*(m+2)**2+ideg+1 ) stop 'iflag = -1'
+*      if ( liwsp.lt.m+2 ) stop 'iflag = -2'
+*      if ( m.ge.n .or. m.le.0 ) stop 'iflag = -3'
+       if ( lwsp.lt.n*(m+2)+5*(m+2)**2+ideg+1 ) iflag = -1
+       if ( liwsp.lt.m+2 ) iflag = -2
+       if ( m.ge.n .or. m.le.0 ) iflag = -3
 
-      if ( iflag.ne.0 ) stop 'bad sizes input DMEXPV njm2'
+*      if ( iflag.ne.0 ) stop 'bad sizes input DMEXPV njm2'
 *      if ( iflag.ne.0 ) stop 'bad sizes (in input of DMEXPV)'
 *
 *---  initialisations ...
@@ -254,7 +254,7 @@
          hj1j = DNRM2( n, wsp(j1v),1 )
 *---     if `happy breakdown' go straightforward at the end ... 
          if ( hj1j.le.break_tol ) then
-*---        print*,'happy breakdown: mbrkdwn =',j,' h =',hj1j
+            ireject = ireject + 0
             k1 = 0
             ibrkflag = 1
             mbrkdwn = j
@@ -331,17 +331,12 @@
          p1 = 10.0d0**(NINT( LOG10( t_step )-SQR1 )-1)
          t_step = AINT( t_step/p1 + 0.55d0 ) * p1
          if ( itrace.ne.0 ) then
-            print*,'t_step =',t_old
-            print*,'err_loc =',err_loc
-            print*,'err_required =',delta*t_old*tol
-            print*,'stepsize rejected, stepping down to:',t_step
+            ireject = ireject + 0
          endif
          ireject = ireject + 1
          nreject = nreject + 1
          if ( mxreject.ne.0 .and. ireject.gt.mxreject ) then
-            print*,"Failure in DMEXPV: ---"
-            print*,"The requested tolerance is too high."
-            Print*,"Rerun with a smaller value."
+            ireject = ireject + 0
             iflag = 2
             return
          endif
@@ -427,13 +422,7 @@
 *---  display and keep some information ...
 *
       if ( itrace.ne.0 ) then
-         print*,'integration',nstep,'---------------------------------'
-         print*,'scale-square =',ns
-         print*,'wnorm     =',beta
-         print*,'step_size =',t_step
-         print*,'err_loc   =',err_loc
-         print*,'roundoff  =',roundoff
-         print*,'next_step =',t_new
+         ireject = ireject + 0
       endif
 
       step_min = MIN( step_min, t_step )
@@ -527,7 +516,7 @@
       iflag = 0
       if ( ldh.lt.m ) iflag = -1
       if ( lwsp.lt.4*mm+ideg+1 ) iflag = -2
-      if ( iflag.ne.0 ) stop 'bad sizes (in input of DGPADM)'
+*      if ( iflag.ne.0 ) stop 'bad sizes (in input of DGPADM)'
 *
 *---  initialise pointers ...
 *
@@ -561,7 +550,7 @@
 
 * This error may happen with DMEXPV, with equal starting probabilities in v
 * and a non-symmetrical matrix
-      if ( hnorm.eq.0.0d0 ) stop 'NJMerr1-nullH DMEXPVmbe=inprobs'
+*      if ( hnorm.eq.0.0d0 ) stop 'NJMerr1-nullH DMEXPVmbe=inprobs'
       ns = MAX( 0,INT(LOG(hnorm)/LOG(2.0d0))+2 )
       scale = t / DBLE(2**ns)
       scale2 = scale*scale
@@ -623,7 +612,7 @@
       endif
       call DAXPY( mm, -1.0d0,wsp(ip),1, wsp(iq),1 )
       call DGESV( m,m, wsp(iq),m, ipiv, wsp(ip),m, iflag )
-      if ( iflag.ne.0 ) stop 'Problem in DGESV (within DGPADM)'
+*      if ( iflag.ne.0 ) stop 'Problem in DGESV (within DGPADM)'
       call DSCAL( mm, 2.0d0, wsp(ip), 1 )
       do j = 1,m
          wsp(ip+(j-1)*(m+1)) = wsp(ip+(j-1)*(m+1)) + 1.0d0
@@ -705,7 +694,7 @@
       iflag = 0
       if ( ldh.lt.m ) iflag = -1
       if ( lwsp.lt.4*mm+ideg+1 ) iflag = -2
-      if ( iflag.ne.0 ) stop 'bad sizes (in input of DSPADM)'
+*      if ( iflag.ne.0 ) stop 'bad sizes (in input of DSPADM)'
 *
 *---  initialise pointers ...
 *
@@ -731,7 +720,7 @@
          hnorm = MAX( hnorm,wsp(i) )
       enddo
       hnorm = ABS( t*hnorm )
-      if ( hnorm.eq.0.0d0 ) stop 'Error - null H in input of DSPADM.'
+*      if ( hnorm.eq.0.0d0 ) stop 'Error - null H in input of DSPADM.'
       ns = MAX( 0,INT(LOG(hnorm)/LOG(2.0d0))+2 )
       scale = t / DBLE(2**ns)
       scale2 = scale*scale
@@ -793,7 +782,7 @@
       endif
       call DAXPY( mm, -1.0d0,wsp(ip),1, wsp(iq),1 )
       call DSYSV( 'U',m,m,wsp(iq),m,ipiv,wsp(ip),m,wsp(ih2),mm,iflag )
-      if ( iflag.ne.0 ) stop 'Problem in DSYSV (within DSPADM)'
+*      if ( iflag.ne.0 ) stop 'Problem in DSYSV (within DSPADM)'
       call DSCAL( mm, 2.0d0, wsp(ip), 1 )
       do j = 1,m
          wsp(ip+(j-1)*(m+1)) = wsp(ip+(j-1)*(m+1)) + 1.0d0
@@ -878,7 +867,7 @@
       iflag = 0
       if ( ldh.lt.m ) iflag = -1
       if ( lwsp.lt.4*mm+ideg+1 ) iflag = -2
-      if ( iflag.ne.0 ) stop 'bad sizes (in input of ZGPADM)'
+*      if ( iflag.ne.0 ) stop 'bad sizes (in input of ZGPADM)'
 *
 *---  initialise pointers ...
 *
@@ -904,7 +893,7 @@
          hnorm = MAX( hnorm,DBLE(wsp(i)) )
       enddo
       hnorm = ABS( t*hnorm )
-      if ( hnorm.eq.0.0d0 ) stop 'Error - null H in input of ZGPADM.'
+*      if ( hnorm.eq.0.0d0 ) stop 'Error - null H in input of ZGPADM.'
       ns = MAX( 0,INT(LOG(hnorm)/LOG(2.0d0))+2 )
       scale =  CMPLX( t/DBLE(2**ns),0.0d0 )
       scale2 = scale*scale
@@ -966,7 +955,7 @@
       endif
       call ZAXPY( mm, -ONE,wsp(ip),1, wsp(iq),1 )
       call ZGESV( m,m, wsp(iq),m, ipiv, wsp(ip),m, iflag )
-      if ( iflag.ne.0 ) stop 'Problem in ZGESV (within ZGPADM)'
+*      if ( iflag.ne.0 ) stop 'Problem in ZGESV (within ZGPADM)'
       call ZDSCAL( mm, 2.0d0, wsp(ip), 1 )
       do j = 1,m
          wsp(ip+(j-1)*(m+1)) = wsp(ip+(j-1)*(m+1)) + ONE
@@ -1050,7 +1039,7 @@
       iflag = 0
       if ( ldh.lt.m ) iflag = -1
       if ( lwsp.lt.4*mm+ideg+1 ) iflag = -2
-      if ( iflag.ne.0 ) stop 'bad sizes (in input of ZHPADM)'
+*      if ( iflag.ne.0 ) stop 'bad sizes (in input of ZHPADM)'
 *
 *---  initialise pointers ...
 *
@@ -1076,7 +1065,7 @@
          hnorm = MAX( hnorm,DBLE(wsp(i)) )
       enddo
       hnorm = ABS( t*hnorm )
-      if ( hnorm.eq.0.0d0 ) stop 'Error - null H in input of ZHPADM.'
+*      if ( hnorm.eq.0.0d0 ) stop 'Error - null H in input of ZHPADM.'
       ns = MAX( 0,INT(LOG(hnorm)/LOG(2.0d0))+2 )
       scale =  CMPLX( t/DBLE(2**ns),0.0d0 )
       scale2 = scale*scale
@@ -1138,7 +1127,7 @@
       endif
       call ZAXPY( mm, -ONE,wsp(ip),1, wsp(iq),1 )
       call ZHESV( 'U',m,m,wsp(iq),m,ipiv,wsp(ip),m,wsp(ih2),mm,iflag )
-      if ( iflag.ne.0 ) stop 'Problem in ZHESV (within ZHPADM)'
+*      if ( iflag.ne.0 ) stop 'Problem in ZHESV (within ZHPADM)'
       call ZDSCAL( mm, 2.0d0, wsp(ip), 1 )
       do j = 1,m
          wsp(ip+(j-1)*(m+1)) = wsp(ip+(j-1)*(m+1)) + ONE
@@ -1249,7 +1238,7 @@
             wsp(iy+j-1) = wsp(iz+j-1)
          enddo
          call ZGESV( M, 1, WSP(iH),M, IWSP, WSP(iY),M, IFLAG )
-         if ( IFLAG.ne.0 ) stop 'Error in DGCHBV'
+*         if ( IFLAG.ne.0 ) stop 'Error in DGCHBV'
 *---     Accumulate the partial result in y ...     
          do j = 1,m
             y(j) = y(j) + DBLE( alpha(ip)*wsp(iy+j-1) )
@@ -1344,7 +1333,7 @@
             wsp(iy+j-1) = wsp(iz+j-1)
          enddo
          call ZSYSV('U', M, 1, WSP(iH),M, IWSP, WSP(iY),M, W,1, IFLAG )
-         if ( IFLAG.ne.0 ) stop 'Error in DSCHBV'
+*         if ( IFLAG.ne.0 ) stop 'Error in DSCHBV'
 *---     Accumulate the partial result in y ...     
          do i = 1,m
             y(i) = y(i) + DBLE( alpha(ip)*wsp(iy+i-1) )
@@ -1443,7 +1432,7 @@
             wsp(iy+j-1) = wsp(iz+j-1)
          enddo
          call ZGESV( M, 1, WSP(iH),M, IWSP, WSP(iY),M, IFLAG )
-         if ( IFLAG.ne.0 ) stop 'Error in ZGCHBV'
+*         if ( IFLAG.ne.0 ) stop 'Error in ZGCHBV'
 *---     Accumulate the partial result in y ...     
          do i = 1,m
             y(i) = y(i) + alpha(ip)*wsp(iy+i-1)
@@ -1456,8 +1445,7 @@
 
       implicit none
       integer          m, ldh
-      double precision t, H(ldh,m), y(m)
-      complex*16       wsp(m*(m+2))
+      double precision t, H(ldh,m), y(m), wsp(m*(m+2))
 
 *-----Purpose----------------------------------------------------------|
 *
@@ -1859,7 +1847,7 @@
       if ( lwsp.lt.n*(m+2)+5*(m+2)**2+ideg+1 ) iflag = -1
       if ( liwsp.lt.m+2 ) iflag = -2
       if ( m.ge.n .or. m.le.0 ) iflag = -3
-      if ( iflag.ne.0 ) stop 'bad sizes (in input of DGEXPV)'
+*      if ( iflag.ne.0 ) stop 'bad sizes (in input of DGEXPV)'
 *
 *---  initialisations ...
 *
@@ -1943,7 +1931,6 @@
          hj1j = DNRM2( n, wsp(j1v),1 )
 *---     if `happy breakdown' go straightforward at the end ... 
          if ( hj1j.le.break_tol ) then
-            print*,'happy breakdown: mbrkdwn =',j,' h =',hj1j
             k1 = 0
             ibrkflag = 1
             mbrkdwn = j
@@ -2020,17 +2007,12 @@
          p1 = 10.0d0**(NINT( LOG10( t_step )-SQR1 )-1)
          t_step = AINT( t_step/p1 + 0.55d0 ) * p1
          if ( itrace.ne.0 ) then
-            print*,'t_step =',t_old
-            print*,'err_loc =',err_loc
-            print*,'err_required =',delta*t_old*tol
-            print*,'stepsize rejected, stepping down to:',t_step
+            ireject = ireject + 0
          endif
          ireject = ireject + 1
          nreject = nreject + 1
          if ( mxreject.ne.0 .and. ireject.gt.mxreject ) then
-            print*,"Failure in DGEXPV: ---"
-            print*,"The requested tolerance is too high."
-            Print*,"Rerun with a smaller value."
+            ireject = ireject + 0
             iflag = 2
             return
          endif
@@ -2059,11 +2041,7 @@
 *---  display and keep some information ...
 *
       if ( itrace.ne.0 ) then
-         print*,'integration',nstep,'---------------------------------'
-         print*,'scale-square =',ns
-         print*,'step_size =',t_step
-         print*,'err_loc   =',err_loc
-         print*,'next_step =',t_new
+         ireject = ireject + 0
       endif
 
       step_min = MIN( step_min, t_step )
@@ -2240,7 +2218,7 @@
       if ( lwsp.lt.n*(m+2)+5*(m+2)**2+ideg+1 ) iflag = -1
       if ( liwsp.lt.m+2 ) iflag = -2
       if ( m.ge.n .or. m.le.0 ) iflag = -3
-      if ( iflag.ne.0 ) stop 'bad sizes (in input of DSEXPV)'
+*      if ( iflag.ne.0 ) stop 'bad sizes (in input of DSEXPV)'
 *
 *---  initialisations ...
 *
@@ -2324,7 +2302,7 @@
          wsp(ih+(j-1)*(mh+1)) = hjj
 *---     if `happy breakdown' go straightforward at the end ... 
          if ( hj1j.le.break_tol ) then
-            print*,'happy breakdown: mbrkdwn =',j,' h =',hj1j
+            ireject = ireject + 0
             k1 = 0
             ibrkflag = 1
             mbrkdwn = j
@@ -2401,17 +2379,12 @@
          p1 = 10.0d0**(NINT( LOG10( t_step )-SQR1 )-1)
          t_step = AINT( t_step/p1 + 0.55d0 ) * p1
          if ( itrace.ne.0 ) then
-            print*,'t_step =',t_old
-            print*,'err_loc =',err_loc
-            print*,'err_required =',delta*t_old*tol
-            print*,'stepsize rejected, stepping down to:',t_step
+            ireject = ireject + 0
          endif
          ireject = ireject + 1
          nreject = nreject + 1
          if ( mxreject.ne.0 .and. ireject.gt.mxreject ) then
-            print*,"Failure in DSEXPV: ---"
-            print*,"The requested tolerance is too high."
-            Print*,"Rerun with a smaller value."
+            ireject = ireject + 0
             iflag = 2
             return
          endif
@@ -2440,11 +2413,7 @@
 *---  display and keep some information ...
 *
       if ( itrace.ne.0 ) then
-         print*,'integration',nstep,'---------------------------------'
-         print*,'scale-square =',ns
-         print*,'step_size =',t_step
-         print*,'err_loc   =',err_loc
-         print*,'next_step =',t_new
+         ireject = ireject + 0
       endif
 
       step_min = MIN( step_min, t_step )
@@ -2629,7 +2598,7 @@
       if ( lwsp.lt.n*(m+2)+5*(m+2)**2+ideg+1 ) iflag = -1
       if ( liwsp.lt.m+2 ) iflag = -2
       if ( m.ge.n .or. m.le.0 ) iflag = -3
-      if ( iflag.ne.0 ) stop 'bad sizes (in input of ZGEXPV)'
+*      if ( iflag.ne.0 ) stop 'bad sizes (in input of ZGEXPV)'
 *
 *---  initialisations ...
 *
@@ -2712,7 +2681,7 @@
          hj1j = DZNRM2( n, wsp(j1v),1 )
 *---     if `happy breakdown' go straightforward at the end ... 
          if ( hj1j.le.break_tol ) then
-            print*,'happy breakdown: mbrkdwn =',j,' h =',hj1j
+            ireject = ireject + 0
             k1 = 0
             ibrkflag = 1
             mbrkdwn = j
@@ -2787,17 +2756,12 @@
          p1 = 10.0d0**(NINT( LOG10( t_step )-SQR1 )-1)
          t_step = AINT( t_step/p1 + 0.55d0 ) * p1
          if ( itrace.ne.0 ) then
-            print*,'t_step =',t_old
-            print*,'err_loc =',err_loc
-            print*,'err_required =',delta*t_old*tol
-            print*,'stepsize rejected, stepping down to:',t_step
+            ireject = ireject + 0
          endif
          ireject = ireject + 1
          nreject = nreject + 1
          if ( mxreject.ne.0 .and. ireject.gt.mxreject ) then
-            print*,"Failure in ZGEXPV: ---"
-            print*,"The requested tolerance is too high."
-            Print*,"Rerun with a smaller value."
+            ireject = ireject + 0
             iflag = 2
             return
          endif
@@ -2827,11 +2791,7 @@
 *---  display and keep some information ...
 *
       if ( itrace.ne.0 ) then
-         print*,'integration',nstep,'---------------------------------'
-         print*,'scale-square =',ns
-         print*,'step_size =',t_step
-         print*,'err_loc   =',err_loc
-         print*,'next_step =',t_new
+         ireject = ireject + 0
       endif
 
       step_min = MIN( step_min, t_step )
@@ -3014,7 +2974,7 @@
       if ( lwsp.lt.n*(m+2)+5*(m+2)**2+ideg+1 ) iflag = -1
       if ( liwsp.lt.m+2 ) iflag = -2
       if ( m.ge.n .or. m.le.0 ) iflag = -3
-      if ( iflag.ne.0 ) stop 'bad sizes (in input of DHEXPV)'
+*      if ( iflag.ne.0 ) stop 'bad sizes (in input of DHEXPV)'
 *
 *---  initialisations ...
 *
@@ -3098,7 +3058,7 @@
          wsp(ih+(j-1)*(mh+1)) = hjj
 *---     if `happy breakdown' go straightforward at the end ...
          if ( hj1j.le.break_tol ) then
-            print*,'happy breakdown: mbrkdwn =',j,' h =',hj1j
+            ireject = ireject + 0
             k1 = 0
             ibrkflag = 1
             mbrkdwn = j
@@ -3176,17 +3136,12 @@
          p1 = 10.0d0**(NINT( LOG10( t_step )-SQR1 )-1)
          t_step = AINT( t_step/p1 + 0.55d0 ) * p1
          if ( itrace.ne.0 ) then
-            print*,'t_step =',t_old
-            print*,'err_loc =',err_loc
-            print*,'err_required =',delta*t_old*tol
-            print*,'stepsize rejected, stepping down to:',t_step
+            ireject = ireject + 0
          endif
          ireject = ireject + 1
          nreject = nreject + 1
          if ( mxreject.ne.0 .and. ireject.gt.mxreject ) then
-            print*,"Failure in ZHEXPV: ---"
-            print*,"The requested tolerance is too high."
-            Print*,"Rerun with a smaller value."
+            ireject = ireject + 0
             iflag = 2
             return
          endif
@@ -3216,11 +3171,7 @@
 *---  display and keep some information ...
 *
       if ( itrace.ne.0 ) then
-         print*,'integration',nstep,'---------------------------------'
-         print*,'scale-square =',ns
-         print*,'step_size =',t_step
-         print*,'err_loc   =',err_loc
-         print*,'next_step =',t_new
+         ireject = ireject + 0
       endif
 
       step_min = MIN( step_min, t_step )
@@ -3387,7 +3338,7 @@
       if ( lwsp.lt.n*(m+3)+5*(m+3)**2+ideg+1 ) iflag = -1
       if ( liwsp.lt.m+3 ) iflag = -2
       if ( m.ge.n .or. m.le.0 ) iflag = -3
-      if ( iflag.ne.0 ) stop 'bad sizes (in input of DGPHIV)'
+*      if ( iflag.ne.0 ) stop 'bad sizes (in input of DGPHIV)'
 *
 *---  initialisations ...
 *
@@ -3471,7 +3422,7 @@
          hj1j = DNRM2( n, wsp(j1v),1 )
 *---     if `happy breakdown' go straightforward at the end ... 
          if ( hj1j.le.break_tol ) then
-            print*,'happy breakdown: mbrkdwn =',j,' h =',hj1j
+            ireject = ireject + 0
             k1 = 0
             ibrkflag = 1
             mbrkdwn = j
@@ -3541,17 +3492,12 @@
          p1 = 10.0d0**(NINT( LOG10( t_step )-SQR1 )-1)
          t_step = AINT( t_step/p1 + 0.55d0 ) * p1
          if ( itrace.ne.0 ) then
-            print*,'t_step =',t_old
-            print*,'err_loc =',err_loc
-            print*,'err_required =',delta*t_old*tol
-            print*,'stepsize rejected, stepping down to:',t_step
+            ireject = ireject + 0
          endif 
          ireject = ireject + 1
          nreject = nreject + 1
          if ( mxreject.ne.0 .and. ireject.gt.mxreject ) then
-            print*,"Failure in DGPHIV: ---"
-            print*,"The requested tolerance is too high."
-            Print*,"Rerun with a smaller value."
+            ireject = ireject + 0
             iflag = 2
             return
          endif
@@ -3576,11 +3522,7 @@
 *---  display and keep some information ...
 *
       if ( itrace.ne.0 ) then
-         print*,'integration',nstep,'---------------------------------'
-         print*,'scale-square =',ns
-         print*,'step_size =',t_step
-         print*,'err_loc   =',err_loc
-         print*,'next_step =',t_new
+         ireject = ireject + 0
       endif
  
       step_min = MIN( step_min, t_step ) 
@@ -3745,7 +3687,7 @@
       if ( lwsp.lt.n*(m+3)+5*(m+3)**2+ideg+1 ) iflag = -1
       if ( liwsp.lt.m+3 ) iflag = -2
       if ( m.ge.n .or. m.le.0 ) iflag = -3
-      if ( iflag.ne.0 ) stop 'bad sizes (in input of DSPHIV)'
+*      if ( iflag.ne.0 ) stop 'bad sizes (in input of DSPHIV)'
 *
 *---  initialisations ...
 *
@@ -3829,7 +3771,7 @@
          wsp(ih+(j-1)*(mh+1)) = hjj
 *---     if `happy breakdown' go straightforward at the end ... 
          if ( hj1j.le.break_tol ) then
-            print*,'happy breakdown: mbrkdwn =',j,' h =',hj1j
+            ireject = ireject + 0
             k1 = 0
             ibrkflag = 1
             mbrkdwn = j
@@ -3905,17 +3847,12 @@
          p1 = 10.0d0**(NINT( LOG10( t_step )-SQR1 )-1)
          t_step = AINT( t_step/p1 + 0.55d0 ) * p1
          if ( itrace.ne.0 ) then
-            print*,'t_step =',t_old
-            print*,'err_loc =',err_loc
-            print*,'err_required =',delta*t_old*tol
-            print*,'stepsize rejected, stepping down to:',t_step
+            ireject = ireject + 0
          endif 
          ireject = ireject + 1
          nreject = nreject + 1
          if ( mxreject.ne.0 .and. ireject.gt.mxreject ) then
-            print*,"Failure in DSPHIV: ---"
-            print*,"The requested tolerance is too high."
-            Print*,"Rerun with a smaller value."
+            ireject = ireject + 0
             iflag = 2
             return
          endif
@@ -3940,11 +3877,7 @@
 *---  display and keep some information ...
 *
       if ( itrace.ne.0 ) then
-         print*,'integration',nstep,'---------------------------------'
-         print*,'scale-square =',ns
-         print*,'step_size =',t_step
-         print*,'err_loc   =',err_loc
-         print*,'next_step =',t_new
+         ireject = ireject + 0
       endif
 
       step_min = MIN( step_min, t_step ) 
@@ -4116,7 +4049,7 @@
       if ( lwsp.lt.n*(m+3)+5*(m+3)**2+ideg+1 ) iflag = -1
       if ( liwsp.lt.m+3 ) iflag = -2
       if ( m.ge.n .or. m.le.0 ) iflag = -3
-      if ( iflag.ne.0 ) stop 'bad sizes (in input of ZGPHIV)'
+*      if ( iflag.ne.0 ) stop 'bad sizes (in input of ZGPHIV)'
 *
 *---  initialisations ...
 *
@@ -4199,7 +4132,7 @@
          hj1j = DZNRM2( n, wsp(j1v),1 )
 *---     if `happy breakdown' go straightforward at the end ... 
          if ( hj1j.le.break_tol ) then
-            print*,'happy breakdown: mbrkdwn =',j,' h =',hj1j
+            ireject = ireject + 0
             k1 = 0
             ibrkflag = 1
             mbrkdwn = j
@@ -4273,17 +4206,12 @@
          p1 = 10.0d0**(NINT( LOG10( t_step )-SQR1 )-1)
          t_step = AINT( t_step/p1 + 0.55d0 ) * p1
          if ( itrace.ne.0 ) then
-            print*,'t_step =',t_old
-            print*,'err_loc =',err_loc
-            print*,'err_required =',delta*t_old*tol
-            print*,'stepsize rejected, stepping down to:',t_step
+            ireject = ireject + 0
          endif
          ireject = ireject + 1
          nreject = nreject + 1
          if ( mxreject.ne.0 .and. ireject.gt.mxreject ) then
-            print*,"Failure in ZGPHIV: ---"
-            print*,"The requested tolerance is too high."
-            Print*,"Rerun with a smaller value."
+            ireject = ireject + 0
             iflag = 2
             return
          endif
@@ -4309,11 +4237,7 @@
 *---  display and keep some information ...
 *
       if ( itrace.ne.0 ) then
-         print*,'integration',nstep,'---------------------------------'
-         print*,'scale-square =',ns
-         print*,'step_size =',t_step
-         print*,'err_loc   =',err_loc
-         print*,'next_step =',t_new
+         ireject = ireject + 0
       endif
 
       step_min = MIN( step_min, t_step )
@@ -4484,7 +4408,7 @@
       if ( lwsp.lt.n*(m+3)+5*(m+3)**2+ideg+1 ) iflag = -1
       if ( liwsp.lt.m+3 ) iflag = -2
       if ( m.ge.n .or. m.le.0 ) iflag = -3
-      if ( iflag.ne.0 ) stop 'bad sizes (in input of ZHPHIV)'
+*      if ( iflag.ne.0 ) stop 'bad sizes (in input of ZHPHIV)'
 *
 *---  initialisations ...
 *
@@ -4566,7 +4490,7 @@
          hj1j = DZNRM2( n, wsp(j1v),1 )
          wsp(ih+(j-1)*(mh+1)) = hjj
          if ( hj1j.le.break_tol ) then
-            print*,'happy breakdown: mbrkdwn =',j,' h =',hj1j
+            ireject = ireject + 0
             k1 = 0
             ibrkflag = 1
             mbrkdwn = j
@@ -4642,17 +4566,12 @@
          p1 = 10.0d0**(NINT( LOG10( t_step )-SQR1 )-1)
          t_step = AINT( t_step/p1 + 0.55d0 ) * p1
          if ( itrace.ne.0 ) then
-            print*,'t_step =',t_old
-            print*,'err_loc =',err_loc
-            print*,'err_required =',delta*t_old*tol
-            print*,'stepsize rejected, stepping down to:',t_step
+            ireject = ireject + 0
          endif
          ireject = ireject + 1
          nreject = nreject + 1
          if ( mxreject.ne.0 .and. ireject.gt.mxreject ) then
-            print*,"Failure in ZHPHIV: ---"
-            print*,"The requested tolerance is too high."
-            Print*,"Rerun with a smaller value."
+            ireject = ireject + 0
             iflag = 2
             return
          endif
@@ -4678,11 +4597,7 @@
 *---  display and keep some information ...
 *
       if ( itrace.ne.0 ) then
-         print*,'integration',nstep,'---------------------------------'
-         print*,'scale-square =',ns
-         print*,'step_size =',t_step
-         print*,'err_loc   =',err_loc
-         print*,'next_step =',t_new
+         ireject = ireject + 0
       endif
 
       step_min = MIN( step_min, t_step )

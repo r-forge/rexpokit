@@ -7,7 +7,7 @@
       integer N, M, LDA, LDB, IPIV(N), IFLAG
       double precision A(LDA,N), B(LDB,M)
       call DGEFA( A,LDA, N, IPIV, IFLAG )
-      if ( IFLAG.ne.0 ) stop "Error in DGESV (LU factorisation)"
+*      if ( IFLAG.ne.0 ) stop "Error in DGESV (LU factorisation)"
       do j = 1,M
          call DGESL( A,LDA, N, IPIV,B(1,j), 0 )
       enddo
@@ -18,7 +18,7 @@
       integer N, M, LDA, LDB, LWRK, IFLAG, IPIV(N)
       double precision A(LDA,N), B(LDB,M), WRK(LWRK)
       call DSIFA( A,LDA, N, IPIV, IFLAG )
-      if ( IFLAG.ne.0 ) stop "Error in DSYSV (LDL' factorisation)"
+*      if ( IFLAG.ne.0 ) stop "Error in DSYSV (LDL' factorisation)"
       do j = 1,M
          call DSISL( A,LDA, N, IPIV, B(1,j) )
       enddo
@@ -28,7 +28,7 @@
       integer N, M, LDA, LDB, IPIV(N), IFLAG
       complex*16 A(LDA,N), B(LDB,M)
       call ZGEFA( A,LDA, N, IPIV, IFLAG )
-      if ( IFLAG.ne.0 ) stop "Error in ZGESV (LU factorisation)"
+*      if ( IFLAG.ne.0 ) stop "Error in ZGESV (LU factorisation)"
       do j = 1,M
          call ZGESL( A,LDA, N, IPIV,B(1,j), 0 )
       enddo
@@ -39,7 +39,7 @@
       integer N, M, LDA, LDB, LWRK, IFLAG, IPIV(N)
       complex*16 A(LDA,N), B(LDB,M), WRK(LWRK)
       call ZHIFA( A,LDA, N, IPIV, IFLAG )
-      if ( IFLAG.ne.0 ) stop "Error in ZHESV (LDL' factorisation)"
+*      if ( IFLAG.ne.0 ) stop "Error in ZHESV (LDL' factorisation)"
       do j = 1,M
          call ZHISL( A,LDA, N, IPIV,B(1,j) )
       enddo
@@ -50,7 +50,7 @@
       integer N, M, LDA, LDB, LWRK, IFLAG, IPIV(N)
       complex*16 A(LDA,N), B(LDB,M), WRK(LWRK)
       call ZSIFA( A,LDA, N, IPIV, IFLAG )
-      if ( IFLAG.ne.0 ) stop "Error in ZSYSV (LDL' factorisation)"
+*      if ( IFLAG.ne.0 ) stop "Error in ZSYSV (LDL' factorisation)"
       do j = 1,M
          call ZSISL( A,LDA, N, IPIV, B(1,j) )
       enddo
