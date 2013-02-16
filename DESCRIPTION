@@ -1,8 +1,8 @@
 Package: rexpokit
 Type: Package
 Title: R wrappers for EXPOKIT; other matrix functions
-Version: 0.22
-Date: 2013-02-08
+Version: 0.24
+Date: 2013-02-10
 Authors@R: c(person("Nicholas J.", "Matzke", email = "matzke@berkeley.edu", role =
         c("aut", "cre", "cph")), person("Roger B.", "Sidje", email =
         "roger.b.sidje@ua.edu", role = c("aut", "cph")))

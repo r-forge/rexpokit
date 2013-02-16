@@ -8,7 +8,7 @@
 }
 \details{
   \tabular{ll}{ Package: \tab rexpokit\cr Type: \tab
-  Package\cr Version: \tab 0.22\cr Date: \tab 2013-02-08\cr
+  Package\cr Version: \tab 0.24\cr Date: \tab 2013-02-10\cr
   License: \tab GPL (>= 2)\cr LazyLoad: \tab yes\cr }
 
   This package wraps some of the matrix exponentiation
@@ -19,6 +19,12 @@
   Package for Computing Matrix Exponentials." \emph{ACM
   Trans. Math. Softw.} 24(1): 130-156).
 
+  The FORTRAN package was developed by Roger B. Sidje, see
+  \url{http://www.maths.uq.edu.au/expokit/}. Nicholas J.
+  Matzke adapted the package for use with R and wrote the R
+  interface. Permission to distribute the EXPOKIT source
+  under GPL was obtained from Roger B. Sidje.
+
   EXPOKIT includes functions for exponentiating both small,
   dense matrices, and large, sparse matrices (in sparse
   matrices, most of the cells have value 0).  Rapid matrix
@@ -27,6 +33,8 @@
   the history of transitions between the possible
   geographic ranges of a species), but is probably useful
   in other ways as well.
+
+  \bold{Background}
 
   Various messages on discussion boards have asked whether
   or not there is an R package that uses EXPOKIT.  There
@@ -53,45 +61,50 @@
   the Q transition matrix ("matvec"), which is the major
   input into an exponentiation algorithm, is not input
   directly, but rather via another function, which requires
-  the user to hack together some FORTRAN code to do this
-  and make a wrapper for the core function.  I couldn't
-  figure it out in a short amount of time, but Stephen
-  Smith did for his "Lagrange" biogeography package, so I
-  essentially copied this chunk of his code to get started.
-  \cr \cr \bold{Installation hints}\cr \cr Installing
+  the user to put together some FORTRAN code to do this and
+  make a wrapper for the core function.  I couldn't figure
+  it out in a short amount of time, but Stephen Smith did
+  for his "LAGRANGE" biogeography package, so I copied and
+  modified this chunk of his code to get started. \cr \cr
+  \bold{Installation hints}\cr \cr Installing
   \code{rexpokit} from source will require a gfortran
   compiler to convert the FORTRAN code files in /src (*.f)
   to object files (*.o), and g++ to compile and link the
   C++ wrapper. \code{rexpokit} was developed on an Intel
   Mac running OS X 10.7.  I (NJM) successfully compiled it
-  using g++ and gfortran from (gcc version 4.2.1).\cr \cr
-  \cr \bold{Note:} This code was developed for the
-  following publication. Please cite if used: Matzke,
-  Nicholas J. (2012). "Founder-event speciation in
-  BioGeoBEARS package dramatically improves likelihoods and
-  alters parameter inference in
-  Dispersal-Extinction-Cladogenesis (DEC) analyses."
-  \emph{Frontiers of Biogeography} 4(suppl. 1): 210.  Link
-  to abstract and PDF of poster:
+  using g++ and gfortran from (gcc version 4.2.1).\cr
+
+  \bold{Citation}
+
+  This code was developed for the following publication.
+  Please cite if used: Matzke, Nicholas J. (2012).
+  "Founder-event speciation in BioGeoBEARS package
+  dramatically improves likelihoods and alters parameter
+  inference in Dispersal-Extinction-Cladogenesis (DEC)
+  analyses." \emph{Frontiers of Biogeography} 4(suppl. 1):
+  210.  Link to abstract and PDF of poster:
   \url{http://phylo.wikidot.com/matzke-2013-international-biogeography-society-poster}.
   (Poster abstract published in the Conference Program and
   Abstracts of the International Biogeography Society 6th
   Biannual Meeting, Miami, Florida. Poster Session P10:
   Historical and Paleo-Biogeography. Poster 129B. January
-  11, 2013.) \cr \cr \bold{Acknowledgements/sources}\cr \cr
-  \bold{1.} Niels Richard Hansen
-  \email{Niels.R.Hansen@math.ku.dk} helped greatly with the
-  initial setup of the package.  See his
+  11, 2013.)
+
+  Please also cite Sidje (1998). \cr \cr
+  \bold{Acknowledgements/sources}\cr \cr \bold{1.} Niels
+  Richard Hansen \email{Niels.R.Hansen@math.ku.dk} helped
+  greatly with the initial setup of the package.  See his
   \code{\link[expoRkit:expoRkit]{expoRkit}} for another R
-  implementation of EXPOKIT routines. \cr \bold{2.}
+  implementation of EXPOKIT routines.\cr \cr \bold{2.}
   EXPOKIT, original FORTRAN package, by Roger B. Sidje
   \email{rbs@maths.uq.edu.au}, Department of Mathematics,
   University of Queensland, Brisbane, QLD-4072, Australia,
-  (c) 1996-2006 All Rights Reserved\cr \cr Sidje has given
+  (c) 1996-2013 All Rights Reserved\cr \cr Sidje has given
   permission to include EXPOKIT code in this R package
   under the usual GPL license for CRAN R packages. For the
   full EXPOKIT copyright and license, see
-  expokit_copyright.txt under rexpokit/notes/. \cr
+  \code{expokit_copyright.txt} under
+  \code{rexpokit/notes/}. \cr
 
   EXPOKIT was published by Sidje in: Sidje RB (1998).
   "Expokit. A Software Package for Computing Matrix
@@ -199,20 +212,31 @@ for (i in 1:length(list_of_P_matrices_dmexpv))
   package dramatically improves likelihoods and alters
   parameter inference in Dispersal-Extinction-Cladogenesis
   (DEC) analyses." _Frontiers of Biogeography_, *4*(suppl.
-  1), pp. 210. Poster abstract published in the Conference
-  Program and Abstracts of the International Biogeography
-  Society 6th Biannual Meeting, Miami, Florida. Poster
-  Session P10: Historical and Paleo-Biogeography. Poster
-  129B. January 11, 2013, <URL:
-  http://phylo.wikidot.com/matzke-2013-international-biogeography-society-poster>.
+  1), pp. 210. ISSN 1948-6596, Poster abstract published in
+  the Conference Program and Abstracts of the International
+  Biogeography Society 6th Biannual Meeting, Miami,
+  Florida. Poster Session P10: Historical and
+  Paleo-Biogeography. Poster 129B. January 11, 2013, <URL:
+  \url{http://phylo.wikidot.com/matzke-2013-international-biogeography-society-poster}>.
 
   Sidje RB (1998). "Expokit. A Software Package for
   Computing Matrix Exponentials." _ACM Trans. Math.
-  Softw._, *24*(1), pp. 130-156.
+  Softw._, *24*(1), pp. 130-156. <URL:
+  http://dx.doi.org/10.1145/285861.285868>, <URL:
+  \url{http://dl.acm.org/citation.cfm?id=285868}>.
+
+  Eddelbuettel D and Francois R (2011). "Rcpp: Seamless R
+  and C++ Integration." _Journal of Statistical Software_,
+  *40*(8), pp. 1-18. ISSN 1548-7660, See also: <URL:
+  http://cran.r-project.org/web/packages/Rcpp/vignettes/Rcpp-introduction.pdf>,
+  <URL:
+  http://cran.r-project.org/web/packages/Rcpp/index.html>.
+  , <URL: \url{http://www.jstatsoft.org/v40/i08}>.
 
   Moler C and Loan CV (2003). "Nineteen dubious ways to
   compute the exponential of a matrix, twenty-five years
-  later." _SIAM review_, pp. 3-49.
+  later." _SIAM review_, *45*(1), pp. 3-49. <URL:
+  \url{http://www.jstor.org/stable/25054364}>.
 
   Foster PG (2001). "The Idiot's Guide to the Zen of
   Likelihood in a Nutshell in Seven Days for Dummies,

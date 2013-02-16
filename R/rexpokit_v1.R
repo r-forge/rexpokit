@@ -381,7 +381,7 @@ expokit_dmexpv_Qmat <- function(Qmat=NULL, t=2.1, inputprobs_for_fast=NULL, tran
 	wsp = double(length=lwsp)
 	
 	# length of iwsp
-	liwsp = m+2
+	liwsp = max(m+2, 7)
 	iwsp = integer(length=liwsp)
 	
 	#matvec = matrix(data=Q, nrow=n, byrow=TRUE)
@@ -398,7 +398,7 @@ expokit_dmexpv_Qmat <- function(Qmat=NULL, t=2.1, inputprobs_for_fast=NULL, tran
 	#colSums(tmatvec)
 	
 	# This might (?) get slow with large matrices -- doesn't seem to
-	if (exists("anorm") == FALSE)
+	if ((exists("anorm") == FALSE) || is.null(anorm))
 		{
 		# Use the 1-norm or one-norm
 		if (transform_to_coo_TF==FALSE && transpose_needed==FALSE)
@@ -998,7 +998,7 @@ expokit_wrapalldmexpv_tvals <- function(Qmat=NULL, tvals=c(2.1), inputprobs_for_
 	wsp = double(length=lwsp)
 	
 	# length of iwsp
-	liwsp = m+2
+	liwsp = max(m+2, 7)
 	iwsp = integer(length=liwsp)
 	
 
@@ -1020,7 +1020,7 @@ expokit_wrapalldmexpv_tvals <- function(Qmat=NULL, tvals=c(2.1), inputprobs_for_
 	# computed. A character indicating the type of norm desired. 
 	# 	"O", "o" or "1"
 	# 		specifies the one norm, (maximum absolute column sum);
-	if (exists("anorm") == FALSE)
+	if ((exists("anorm") == FALSE) || is.null(anorm))
 		{
 		# Use the 1-norm or one-norm
 		if (transform_to_coo_TF==FALSE && transpose_needed==FALSE)
@@ -1651,7 +1651,7 @@ expokit_dgexpv_Qmat <- function(Qmat=NULL, t=2.1, inputprobs_for_fast=NULL, tran
 	wsp = double(length=lwsp)
 	
 	# length of iwsp
-	liwsp = m+2
+	liwsp = max(m+2, 7)
 	iwsp = integer(length=liwsp)
 	
 	#matvec = matrix(data=Q, nrow=n, byrow=TRUE)
@@ -1668,7 +1668,7 @@ expokit_dgexpv_Qmat <- function(Qmat=NULL, t=2.1, inputprobs_for_fast=NULL, tran
 	#colSums(tmatvec)
 	
 	# This might (?) get slow with large matrices -- doesn't seem to
-	if (exists("anorm") == FALSE)
+	if ((exists("anorm") == FALSE) || is.null(anorm))
 		{
 		# Use the 1-norm or one-norm
 		if (transform_to_coo_TF==FALSE && transpose_needed==FALSE)
@@ -1818,7 +1818,7 @@ expokit_dgexpv_Qmat <- function(Qmat=NULL, t=2.1, inputprobs_for_fast=NULL, tran
 #'	wsp = double(length=lwsp)
 #'	
 #'	# length of iwsp
-#'	liwsp = m+2
+#'	liwsp = max(m+2, 7)
 #'	iwsp = integer(length=liwsp)
 #'	
 #'	res = double(length=n*n)
@@ -2082,7 +2082,7 @@ expokit_wrapalldgexpv_tvals <- function(Qmat=NULL, tvals=c(2.1), inputprobs_for_
 	wsp = double(length=lwsp)
 	
 	# length of iwsp
-	liwsp = m+2
+	liwsp = max(m+2, 7)
 	iwsp = integer(length=liwsp)
 	
 
@@ -2104,7 +2104,7 @@ expokit_wrapalldgexpv_tvals <- function(Qmat=NULL, tvals=c(2.1), inputprobs_for_
 	# computed. A character indicating the type of norm desired. 
 	# 	"O", "o" or "1"
 	# 		specifies the one norm, (maximum absolute column sum);
-	if (exists("anorm") == FALSE)
+	if ((exists("anorm") == FALSE) || is.null(anorm))
 		{
 		# Use the 1-norm or one-norm
 		if (transform_to_coo_TF==FALSE && transpose_needed==FALSE)

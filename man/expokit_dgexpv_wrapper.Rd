@@ -107,7 +107,7 @@ timeval = tvals[2]
 	wsp = double(length=lwsp)
 
 	# length of iwsp
-	liwsp = m+2
+	liwsp = max(m+2, 7)
 	iwsp = integer(length=liwsp)
 
 	res = double(length=n*n)

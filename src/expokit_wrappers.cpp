@@ -44,7 +44,7 @@ Specifically:
 pyprop/core/krylov/expokit/f2c/expokit.h 
 */
 
-/**
+/*
 3. EXPOKIT package is available at:
 http://www.maths.uq.edu.au/expokit/
 
@@ -52,7 +52,7 @@ Copyright:
 http://www.maths.uq.edu.au/expokit/copyright
 ...or...
 expokit_copyright.txt in this install
-/
+*/
 
 /*
 Note: Because these functions are defined with

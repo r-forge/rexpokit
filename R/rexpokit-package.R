@@ -3,8 +3,8 @@
 #' \tabular{ll}{
 #' Package: \tab rexpokit\cr
 #' Type: \tab Package\cr
-#' Version: \tab 0.22\cr
-#' Date: \tab 2013-02-08\cr
+#' Version: \tab 0.24\cr
+#' Date: \tab 2013-02-10\cr
 #' License: \tab GPL (>= 2)\cr
 #' LazyLoad: \tab yes\cr
 #' }
@@ -17,6 +17,11 @@
 #' Package for Computing Matrix Exponentials."
 #' \emph{ACM Trans. Math. Softw.} 24(1): 130-156).  
 #'
+#' The FORTRAN package was developed by Roger B. Sidje, see
+#' \url{http://www.maths.uq.edu.au/expokit/}. Nicholas J. Matzke adapted
+#' the package for use with R and wrote the R interface. Permission to distribute
+#' the EXPOKIT source under GPL was obtained from Roger B. Sidje.
+#' 
 #' EXPOKIT includes functions for exponentiating both small, dense
 #' matrices, and large, sparse matrices (in sparse
 #' matrices, most of the cells have value 0).  Rapid
@@ -26,6 +31,8 @@
 #' possible geographic ranges of a species), but is
 #' probably useful in other ways as well.
 #' 
+#' \bold{Background}
+#'
 #' Various messages on discussion boards have asked whether or
 #' not there is an R package that uses EXPOKIT.  There are only two as of this
 #' writing (January 2013) -- \code{\link[diversitree:find.mle]{diversitree}} and \code{\link[ctarma]{ctarma}}.
@@ -43,11 +50,11 @@
 #' not run "out of the box" -- in particular, the Q transition
 #' matrix ("matvec"), which is the major input into an
 #' exponentiation algorithm, is not input directly, but rather
-#' via another function, which requires the user to hack
+#' via another function, which requires the user to put
 #' together some FORTRAN code to do this and make a wrapper for
 #' the core function.  I couldn't figure it out in a short
-#' amount of time, but Stephen Smith did for his "Lagrange"
-#' biogeography package, so I essentially copied this chunk of
+#' amount of time, but Stephen Smith did for his "LAGRANGE"
+#' biogeography package, so I copied and modified this chunk of
 #' his code to get started.
 #' \cr
 #' \cr
@@ -57,9 +64,10 @@
 #' code files in /src (*.f) to object files (*.o), and g++ to compile and link the C++ wrapper.
 #' \code{rexpokit} was developed on an Intel Mac running OS X 10.7.  I (NJM) successfully compiled
 #' it using g++ and gfortran from (gcc version 4.2.1).\cr
-#' \cr
-#' \cr
-#' \bold{Note:} This code was developed for the following publication. Please cite if used:
+#'
+#' \bold{Citation}
+#'
+#' This code was developed for the following publication. Please cite if used:
 #' Matzke, Nicholas J. (2012). "Founder-event speciation in BioGeoBEARS package dramatically improves
 #' likelihoods and alters parameter inference in Dispersal-Extinction-Cladogenesis (DEC) analyses." 
 #' \emph{Frontiers of Biogeography} 4(suppl. 1): 210.  Link to abstract and PDF of poster: 
@@ -67,21 +75,23 @@
 #' published in the Conference Program and Abstracts of the International Biogeography Society 6th Biannual 
 #' Meeting, Miami, Florida. Poster Session P10: Historical and Paleo-Biogeography. Poster 129B. January 11, 
 #' 2013.)
+#'
+#' Please also cite Sidje (1998).
 #' \cr
 #' \cr
 #' \bold{Acknowledgements/sources}\cr
 #' \cr
 #' \bold{1.} Niels Richard Hansen \email{Niels.R.Hansen@@math.ku.dk} helped greatly with the 
 #' initial setup of the package.  See his \code{\link[expoRkit:expoRkit]{expoRkit}} for another R
-#' implementation of EXPOKIT routines.
+#' implementation of EXPOKIT routines.\cr
 #' \cr
 #' \bold{2.} EXPOKIT, original FORTRAN package, by Roger B. Sidje \email{rbs@@maths.uq.edu.au}, 
 #' Department of Mathematics, University of Queensland, Brisbane, QLD-4072, Australia, 
-#' (c) 1996-2006 All Rights Reserved\cr
+#' (c) 1996-2013 All Rights Reserved\cr
 #' \cr
 #' Sidje has given permission to include EXPOKIT code in this R package under the usual
 #' GPL license for CRAN R packages. For the full EXPOKIT copyright and license, see 
-#' expokit_copyright.txt under rexpokit/notes/. \cr
+#' \code{expokit_copyright.txt} under \code{rexpokit/notes/}. \cr
 #'
 #' EXPOKIT was published by Sidje in: Sidje RB (1998). "Expokit. A Software Package for Computing
 #' Matrix Exponentials." \emph{ACM-Transactions on Mathematical Software}, 24(1):130-156.
@@ -132,6 +142,7 @@
 #' @bibliography /Dropbox/_njm/__packages/rexpokit_setup/rexpokit_refs.bib
 #'   @cite Matzke_2012_IBS
 #'   @cite Sidje1998
+#'   @cite Eddelbuettel_Francois_2011
 #'   @cite moler2003nineteen
 #'   @cite FosterIdiots
 #' @keywords package, matrix, matrix exponentiation, phylogenetics, transition matrix, expokit
